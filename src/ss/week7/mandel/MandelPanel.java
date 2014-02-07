@@ -7,14 +7,17 @@ import java.awt.Rectangle;
 import javax.swing.JPanel;
 
 /**
- * Graphical compontent for drawing a Mandelbrot fractal
+ * Graphical component for drawing a Mandelbrot fractal
  * @author Martin Kalin, aangepast door Arend Rensink
  * @version 15-01-2002
  */
-class MandelPanel extends JPanel
+class MandelPanel extends JPanel implements Runnable
 {
+	public Thread thread;
+	
 	public void draw() {
-		(new MandelThread(this)).start();
+		thread = new Thread(this);
+		thread.start();
 	}
 
 
@@ -111,4 +114,10 @@ class MandelPanel extends JPanel
 		}
 		COLORS[MAX_COLORS] = Color.white;
 	}
+
+	@Override
+	public void run() {
+		drawMandel();
+	}
+
 }

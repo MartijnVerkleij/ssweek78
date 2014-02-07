@@ -17,7 +17,14 @@ import javax.swing.JMenuItem;
  * so the GUI buttons are still responsive to user actions.
  * @author: Martin Kalin
  */
+
+
 public class MandelSet {
+	
+
+	private JFrame win;
+	private MandelPanel canvas;
+	
 	public MandelSet() {
 		win = new JFrame("Mandelbrot Set");
 		Container c = win.getContentPane();
@@ -47,8 +54,6 @@ public class MandelSet {
 		win.setVisible(true);
 	}
 
-	private JFrame win;
-	private MandelPanel canvas;
 
 	public static void main(String[] args) {
 		new MandelSet();

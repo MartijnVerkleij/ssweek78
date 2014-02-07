@@ -1,0 +1,5 @@
+7.13
+  a) ReentrantLock bevat de optie een "fairness"-policy toe te voegen voor concurrent threads.
+  b) ja, lock kan tussen meerdere methodes behouden blijven
+  c) minder last van starvation in threads
+  d) slomer
