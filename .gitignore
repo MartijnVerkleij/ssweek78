@@ -6,7 +6,9 @@
 *.ear
 
 
+.checkstyle
 .settings
 .metadata
 .classpath
 .project
+/bin
