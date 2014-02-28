@@ -31,12 +31,19 @@ public class Peer implements Runnable {
 	 */
 	public Peer(String nameArg, Socket sockArg) throws IOException
 	{
+		name = nameArg;
+		sock = sockArg;
+		in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+		out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
 	}
 
 	/**
 	 * Reads strings of the stream of the socket-connection and writes the characters to the default output
 	 */
 	public void run() {
+		while (true) {
+			
+		}
 	}
 
 
@@ -50,6 +57,13 @@ public class Peer implements Runnable {
 	 * Closes the connection, the sockets will be terminated
 	 */
 	public void shutDown() {
+		try {
+			in.close();
+			out.close();
+			sock.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**  returns name of the peer object*/
