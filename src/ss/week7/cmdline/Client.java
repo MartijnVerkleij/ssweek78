@@ -1,9 +1,16 @@
 package ss.week7.cmdline;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
+
+import ss.week7.chatbox.MessageUI;
 
 /**
  * Client class for a simple client-server application
@@ -12,7 +19,68 @@ import java.net.UnknownHostException;
  */
 public class Client {
 	private static final String USAGE = "usage: java week4.cmdline.Client <name> <address> <port>";
+	private String clientName;
+	private MessageUI mui;
+	private Socket sock;
+	private BufferedReader in;
+	private BufferedWriter out;
+	
+	/**
+	 * Constructs a Client-object and tries to make a socket connection
+	 */
+	public Client(String name, InetAddress host, int port, MessageUI muiArg)
+			throws IOException {
+		clientName = name;
+		sock = new Socket(host, port);
+		in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+		out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
+		mui = muiArg;
+	}
 
+	/**
+	 * Reads the messages in the socket connection. Each message will be
+	 * forwarded to the MessageUI
+	 */
+	public void run() {
+		Scanner input = new Scanner(System.in);
+		while (true) {
+			String message = input.nextLine();
+			if (message.equals(".")) {
+				break;
+			}
+			sendMessage(message);
+		}
+	}
+
+	/** send a message to a ClientHandler. */
+	public void sendMessage(String msg) {
+		try {
+			out.write(msg);
+			out.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	/** close the socket connection. */
+	public void shutdown() {
+		try {
+			in.close();
+			out.close();
+			sock.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	/** returns the client name */
+	public String getClientName() {
+		return clientName;
+	}
+	
+	
 	/** Start een Client-applicatie op. */
 	public static void main(String[] args) {
 		if (args.length != 3) {

@@ -9,7 +9,8 @@ import java.net.Socket;
 
 /**
  * Peer for a simple client-server application
- * @author  Theo Ruys
+ * 
+ * @author Theo Ruys
  * @version 2005.02.21
  */
 public class Peer implements Runnable {
@@ -20,39 +21,76 @@ public class Peer implements Runnable {
 	protected BufferedReader in;
 	protected BufferedWriter out;
 
-
-	/*@
-	   requires (nameArg != null) && (sockArg != null);
+	/*
+	 * @ requires (nameArg != null) && (sockArg != null);
 	 */
 	/**
 	 * Constructor. creates a peer object based in the given parameters.
-	 * @param   nameArg name of the Peer-proces
-	 * @param   sockArg Socket of the Peer-proces
+	 * 
+	 * @param nameArg
+	 *            name of the Peer-proces
+	 * @param sockArg
+	 *            Socket of the Peer-proces
 	 */
-	public Peer(String nameArg, Socket sockArg) throws IOException
-	{
+	public Peer(String nameArg, Socket sockArg) throws IOException {
+		name = nameArg;
+		sock = sockArg;
+		in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+		out = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()));
 	}
 
 	/**
-	 * Reads strings of the stream of the socket-connection and writes the characters to the default output
+	 * Reads strings of the stream of the socket-connection and writes the
+	 * characters to the default output
 	 */
 	public void run() {
+		while (true) {
+			try {
+				System.out.println(in.readLine());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
-
 	/**
-	 * Reads a string from the console and sends this string over the socket-connection to the Peer proces. On Peer.EXIT the method ends
+	 * Reads a string from the console and sends this string over the
+	 * socket-connection to the Peer proces. On Peer.EXIT the method ends
 	 */
 	public void handleTerminalInput() {
+		while (true) {
+			try {
+				String write = readString(name + ": ");
+				if (write.equals(EXIT)) {
+					shutDown();
+				} else {
+					if (!write.equals(null)) {
+						out.write(write + "\n\r");
+						out.flush();
+					}
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
 	 * Closes the connection, the sockets will be terminated
 	 */
 	public void shutDown() {
+		try {
+			in.close();
+			out.close();
+			sock.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	/**  returns name of the peer object*/
+	/** returns name of the peer object */
 	public String getName() {
 		return name;
 	}
@@ -62,9 +100,9 @@ public class Peer implements Runnable {
 		System.out.print(tekst);
 		String antw = null;
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(
+			BufferedReader input = new BufferedReader(new InputStreamReader(
 					System.in));
-			antw = in.readLine();
+			antw = input.readLine();
 		} catch (IOException e) {
 		}
 
